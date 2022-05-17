@@ -13,6 +13,7 @@ text-align: center;
 </head>
 <body>
 	<h1>Hello World!</h1>
+	<p>git push test</p>
 </body>
 <script type="text/javascript" src="/resources/static/js/index.js"></script>
 </html>
