@@ -28,5 +28,6 @@ CREATE TABLE IF NOT EXISTS board(
     create_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '작성 날짜',
     CONSTRAINT board_students_id_fk FOREIGN KEY (students_id) REFERENCES students(students_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- ENGINE과 CHARSET은 입력하지 않아도 자동으로 설정되지만, 엔진을 변경하거나 인코딩 포맷을 변경할 때 사용한다.
 
 -- 이제 프로젝트를 실행하면 DB에 테이블이 생성된다.

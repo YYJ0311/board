@@ -23,6 +23,13 @@ public class StudentsRestController {
 	@Autowired
 	private StudentsService studentService;
 	
+//	중요한 정보를 서버에 전송할 때 POST 사용
+	@CrossOrigin
+	@PostMapping("/login")
+	public boolean callIsLogin(@RequestBody StudentsVO vo) {
+		return studentService.isStudents(vo);
+	}
+	
 //	학생 저장
 //	post는 body로 데이터를 받음 ==> 보안 때문에
 //	위에서 @RequestMapping으로 중복되는 주소를 입력해줬기 때문에 @PostMapping("/api/v1/students")는 다음이랑 같다.

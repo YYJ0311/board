@@ -1,0 +1,35 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dw.board.mapper.BoardMapper">
+<!-- 보드 저장 -->
+	<insert id="insertBoard">
+		INSERT INTO board
+		(
+			title,
+			content
+			<if test="studentsId != 0">
+			, students_id
+			</if>
+			<!-- studentsId 가 0이 아니면 추가하겠다는 뜻 -->
+			<!-- studentsId가 board 테이블의 FK이므로 테이블에 존재하지 않는 studentsId를 입력하면 DB에서 insert를 거부한다. -->
+			<!-- studentsId를 입력하지 않아도 insert 됨 -->
+		)
+		VALUES
+		(
+			#{title},
+			#{content}
+			<if test="studentsId != 0">
+			,#{studentsId}
+			</if>
+		)
+	</insert>
+<!-- 보드 조회 -->
+	<select id="selectAllBoardList" resultType="BoardVO">
+		SELECT
+			board_id AS boardId,
+			title,
+			content,
+			update_at AS updateAt,
+			create_at AS createAt
+		FROM board
+	</select>	
+</mapper>

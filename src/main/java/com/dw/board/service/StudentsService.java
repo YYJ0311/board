@@ -53,4 +53,22 @@ public class StudentsService {
 		vo.setStudentsId(studentsId);
 		return studentsMapper.updateStudents(vo);
 	}
+	
+//	5.19
+//	가입된 학생인지 여부 체크
+	public boolean isStudents(StudentsVO vo) {
+		StudentsVO student = studentsMapper.selectStudentsOne(vo);
+		if(student == null) { // 회원이 없다면(쿼리결과가 null이면)
+			return false;
+		}
+		String inputPassword = vo.getStudentsPassword(); // HTML에서 받아온 비밀번호
+		String password = student.getStudentsPassword(); // DB에서 가져온 진짜 비밀번호
+//		PasswordEncoder 안에 matches 메소드 사용
+		if(!passwordEncoder.matches(inputPassword, password)) { // 비밀번호가 다르다면
+//			HTML에서 받아오는 비밀번호를 encoding 한 후 DB의 비밀번호랑 비교한다.
+//			따라서 만약 matches 안에 두 비밀번호가 문자 그대로 같다면(encoding 하기 전부터 같다면, 예를들어 (123,123)) matches는 false를 리턴한다.
+			return false;
+		}
+		return true;
+	}
 }
