@@ -11,4 +11,6 @@ public class BoardVO {
 	private String createAt;
 	
 	private int studentsId;
+	
+	private StudentsVO studentsVO;
 }
