@@ -54,11 +54,12 @@ public class StudentsRestController {
 	// 학생 조회 map으로 리턴해보기
 	@GetMapping("/students/map")
 	public List<Map<String, Object>> callStudentsListByMap(HttpSession httpSession){
-		String name = (String)httpSession.getAttribute("name"); // key값으로 get함
-		System.out.println("세션에서 가져온 이름은 ==> "+name); // session에 저장했던 value가 출력됨
-		if(name == null) { // 로그인을 안 했거나 session에 저장되지 않은 경우에 null을 return
-			return null;
-		}
+//		세션 데이터 가져오기. 나중에 할 예정
+//		String name = (String)httpSession.getAttribute("name"); // key값으로 get함
+//		System.out.println("세션에서 가져온 이름은 ==> "+name); // session에 저장했던 value가 출력됨
+//		if(name == null) { // 로그인을 안 했거나 session에 저장되지 않은 경우에 null을 return
+//			return null;
+//		}
 		return studentService.getAllStudentsListByMap();
 	}
 	
