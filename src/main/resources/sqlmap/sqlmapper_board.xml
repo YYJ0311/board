@@ -31,10 +31,75 @@
 			s.students_name AS studentsName,
 			b.title,
 			b.content,
+			IFNULL(DATE_FORMAT(b.update_at, '%Y-%m-%d  %H:%m:%s'), '-') AS updateAt,
+			DATE_FORMAT(b.create_at, '%Y-%m-%d  %H:%m:%s') AS createAt,
+			b.cnt
+		FROM board AS b
+		INNER JOIN students AS s
+		ON b.students_id = s.students_id
+	</select>	
+<!-- 보드 수정 -->
+	<update id="updateBoard">
+		UPDATE Board
+		SET
+			title = #{title},
+			content = #{content},
+			update_at = now()
+		WHERE board_id = #{boardId}
+	</update>
+<!-- 보드 삭제 -->	
+	<delete id="deleteBoard">
+		DELETE FROM board
+		WHERE board_id = #{boardId}
+	</delete>
+<!-- 게시판 상세보기 -->
+	<select id="openDetailedBoard" resultType="BoardVO">
+		<!--  SELECT
+			s.students_id AS studentsId,
+			s.students_name AS studentsName,
+			b.title,
+			b.content,
 			IFNULL(DATE_FORMAT(b.update_at, '%Y-%m-%d'), '-') AS updateAt,
 			DATE_FORMAT(b.create_at, '%Y-%m-%d') AS createAt
 		FROM board AS b
 		INNER JOIN students AS s
 		ON b.students_id = s.students_id
-	</select>	
+		WHERE board_id = #{boardId} -->
+		<!-- 굳이 join을 쓸 필욘 없다. -->
+		SELECT
+			board_id AS boardId,
+			title,
+			content,
+			IFNULL(DATE_FORMAT(update_at, '%Y-%m-%d'), '-') AS updateAt,
+			DATE_FORMAT(create_at, '%Y-%m-%d') AS createAt,
+			students_id AS StudentsId,
+			cnt
+			<!-- DB의 board 테이블에 students_id가 없지만, BoardVO에서 studentsId를 가져왔기 때문에 사용 가능하다.  -->
+		FROM board
+		WHERE board_id = #{boardId}
+	</select>
+<!-- 조회수 업데이트 -->
+	<update id="updateBoardViews">
+		UPDATE board
+		SET cnt = #{cnt}
+		WHERE board_id = #{boardId}
+	</update>
+<!-- studentsName로 보드 조회하기 -->
+	<select id="selectSearchBoardList" resultType="map">
+		SELECT
+			b.board_id AS boardId,
+			s.students_id AS studentsId,
+			s.students_name AS studentsName,
+			b.title,
+			b.content,
+			IFNULL(DATE_FORMAT(b.update_at, '%Y-%m-%d'), '-') AS updateAt,
+			DATE_FORMAT(b.create_at, '%Y-%m-%d') AS createAt,
+			b.cnt
+		FROM board AS b
+		INNER JOIN students AS s
+		ON b.students_id = s.students_id
+		<!-- WHERE s.students_name like CONCAT(#{studentsName}, '%') -->
+		<!-- 위는 한글자만 같아도 전부 조회됨 -->
+		WHERE s.students_name = #{studentsName}
+	</select>
 </mapper>

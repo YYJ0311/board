@@ -9,8 +9,9 @@ public class BoardVO {
 	private String content;
 	private String updateAt;
 	private String createAt;
+	private int cnt;
 	
 	private int studentsId;
 	
-	private StudentsVO studentsVO;
+//	private StudentsVO studentsVO;
 }

@@ -47,10 +47,11 @@ public class StudentsRestController {
 	
 //	학생 조회(vo로 리턴)
 //	@GetMapping("/api/v1/students")
+	@CrossOrigin
 	@GetMapping("/students")
 	public List<StudentsVO> callStudentsList(){
 		return studentService.getAllStudentsList();
-	}
+	} 
 	// 학생 조회 map으로 리턴해보기
 	@GetMapping("/students/map")
 	public List<Map<String, Object>> callStudentsListByMap(HttpSession httpSession){
