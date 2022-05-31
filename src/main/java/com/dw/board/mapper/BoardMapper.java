@@ -24,4 +24,6 @@ public interface BoardMapper {
 	
 	public List<Map<String, Object>> selectSearchBoardList(@Param("studentsName") String studentsName);
 //	파라미터가 1개일 땐 @Param 생략가능. 2개 이상이면 써줘야 한다.
+	
+	public Map<String, Object> selectBoardStatistics();
 }

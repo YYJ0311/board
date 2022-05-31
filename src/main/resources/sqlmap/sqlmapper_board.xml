@@ -102,4 +102,18 @@
 		<!-- 위는 한글자만 같아도 전부 조회됨 -->
 		WHERE s.students_name = #{studentsName}
 	</select>
+<!-- 통계 통합 쿼리 -->
+	<select id="selectBoardStatistics" resultType="map">
+	<!-- resultType은 map으로! -->
+	select
+		count(*) as boardCnt,
+		sum(cnt) as viewsCnt,
+		(select count(*)
+		from students s) as studentsCnt,
+		(select count(distinct(b.students_id))
+		from board b
+		inner join students s 
+		on b.students_id = s.students_id) as writerCnt
+	from board 
+	</select>
 </mapper>
