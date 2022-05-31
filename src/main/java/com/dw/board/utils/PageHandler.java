@@ -62,7 +62,7 @@ public class PageHandler {
 		}
 	}
 	
-	public void setPreNext(int pagNum) {
+	public void setPreNext(int pageNum) {
 		if(this.lastBlock == 1) { 
 			setHasNextPage(false);
 			setHasPreviousPage(false);
