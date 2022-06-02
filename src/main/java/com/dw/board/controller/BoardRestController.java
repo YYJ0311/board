@@ -40,7 +40,7 @@ public class BoardRestController {
 	@CrossOrigin
 	@GetMapping("/board")
 	public PageInfo<Map<String, Object>> callBoardList(@RequestParam("pageNum") int pageNum, 
-			@RequestParam("pageSize") int pageSize ){
+			@RequestParam("pageSize") int pageSize){
 //		리턴 타입을 list에서 PageInfo로 변경함
 		List<Map<String, Object>> list = boardService.getAllBoardList(pageNum, pageSize);
 		return new PageInfo<Map<String, Object>>(list);

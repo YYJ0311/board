@@ -18,13 +18,14 @@
 		)
 	</insert>
 
-	<select id="selectAllStudentsList" resultType="StudentsVO">
+	<select id="selectAllStudentsList" resultType="map">
 		SELECT
 			students_id AS studentsId, <!-- as로 변수이름과 동일하게 해야 mapping이 된다.(VO클래스의 변수이름과 동일해야 MyBatis에서 자동으로 set이 됨.) -->
 			students_name AS studentsName,
 			students_password AS studentsPassword,
 			create_at AS createAt
 		FROM students
+		ORDER BY studentsId DESC
 	</select>
 		<select id="selectAllStudentsListByMap" resultType="map">
 		SELECT

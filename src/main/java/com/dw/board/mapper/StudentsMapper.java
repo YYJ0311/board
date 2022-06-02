@@ -24,7 +24,7 @@ public interface StudentsMapper {
 	 * @date : 2022. 5. 18.
 	 * comment : 학생 조회
 	 */
-	public List<StudentsVO> selectAllStudentsList();
+	public List<Map<String, Object>> selectAllStudentsList();
 	public List<Map<String, Object>> selectAllStudentsListByMap();
 	public StudentsVO selectStudents(int studentsId);
 	

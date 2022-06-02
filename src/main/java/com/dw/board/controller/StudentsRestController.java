@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dw.board.service.StudentsService;
 import com.dw.board.vo.StudentsVO;
+import com.github.pagehelper.PageInfo;
 
 @RestController
 @RequestMapping("/api/v1") // 중복되는 url 간략화
@@ -49,9 +51,13 @@ public class StudentsRestController {
 //	@GetMapping("/api/v1/students")
 	@CrossOrigin
 	@GetMapping("/students")
-	public List<StudentsVO> callStudentsList(){
-		return studentService.getAllStudentsList();
+	public PageInfo<Map<String, Object>> callStudentsList(@RequestParam("pageNum") int pageNum, 
+			@RequestParam("pageSize") int pageSize){
+		List<Map<String, Object>> list = studentService.getAllStudentsList(pageNum, pageSize);
+		return new PageInfo<Map<String, Object>>(list);
 	} 
+//	http://localhost:8080/api/v1/students?pageNum=1&pageSize=10
+	
 	// 학생 조회 map으로 리턴해보기
 	@GetMapping("/students/map")
 	public List<Map<String, Object>> callStudentsListByMap(HttpSession httpSession){
