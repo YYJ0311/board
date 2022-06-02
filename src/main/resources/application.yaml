@@ -30,3 +30,9 @@ spring:
          suffix: .jsp
       # css, js, image 폴더 위치 설정
       static-path-pattern: /resources/static/**
+      
+pagehelper:
+   # 사용할 데이터베이스
+   helper-dialect: mysql
+   # 0페이지 요청이 들어오면 자동으로 1페이지로, 13페이지까지 있는데 14페이지 요청이 들어오면 자동으로 13페이지로 변환.
+   reasonable: true

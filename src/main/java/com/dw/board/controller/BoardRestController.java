@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dw.board.service.BoardService;
 import com.dw.board.vo.BoardVO;
+import com.github.pagehelper.PageInfo;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -38,9 +39,13 @@ public class BoardRestController {
 //	게시판 조회(R)
 	@CrossOrigin
 	@GetMapping("/board")
-	public List<Map<String, Object>> callBoardList(){
-		return boardService.getAllBoardList();
+	public PageInfo<Map<String, Object>> callBoardList(@RequestParam("pageNum") int pageNum, 
+			@RequestParam("pageSize") int pageSize ){
+//		리턴 타입을 list에서 PageInfo로 변경함
+		List<Map<String, Object>> list = boardService.getAllBoardList(pageNum, pageSize);
+		return new PageInfo<Map<String, Object>>(list);
 	}
+//	http://localhost:8080/api/v1/board?pageNum=1&pageSize=10
 	
 //	게시판 수정(U)
 	@CrossOrigin

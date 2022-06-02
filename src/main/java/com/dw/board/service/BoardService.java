@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dw.board.mapper.BoardMapper;
 import com.dw.board.vo.BoardVO;
+import com.github.pagehelper.PageHelper;
 
 @Service
 public class BoardService {
@@ -20,7 +21,10 @@ public class BoardService {
 		return boardMapper.insertBoard(vo);
 	}
 //	보드 조회
-	public List<Map<String, Object>> getAllBoardList(){
+//	pageNum : 현재 페이지, pageSize : 한 페이지에 게시물 몇개 보여줄지
+	public List<Map<String, Object>> getAllBoardList(int pageNum, int pageSize){
+		// 이클립스에서 만들었던 페이징 처리가 아래 한 줄에 전부 들어있음
+		PageHelper.startPage(pageNum, pageSize);
 		return boardMapper.selectAllBoardList();
 	}
 //	보드 수정

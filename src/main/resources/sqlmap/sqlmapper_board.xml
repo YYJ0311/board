@@ -37,6 +37,7 @@
 		FROM board AS b
 		INNER JOIN students AS s
 		ON b.students_id = s.students_id
+		ORDER BY boardId
 	</select>	
 <!-- 보드 수정 -->
 	<update id="updateBoard">
