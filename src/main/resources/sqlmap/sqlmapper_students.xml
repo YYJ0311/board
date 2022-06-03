@@ -69,4 +69,16 @@
 		FROM students
 		WHERE students_name = #{studentsName}
 	</select>
+	
+<!-- 학생이름으로 학생정보 조회 -->
+	<select id="selectSearchStudentsInfo" resultType="map">
+		SELECT
+			students_id as studentsId,
+			students_name as studentsName,
+			create_at as createAt
+		FROM students
+		<!-- WHERE s.students_name like CONCAT(#{studentsName}, '%') -->
+		<!-- 위는 한글자만 같아도 전부 조회됨 -->
+		WHERE students_name = #{studentsName}
+	</select>
 </mapper>

@@ -73,4 +73,8 @@ public class StudentsService {
 		}
 		return true;
 	}
+	
+	public List<Map<String, Object>> getStudentsInfo(String studentsName){
+		return studentsMapper.selectSearchStudentsInfo(studentsName);
+	}
 }

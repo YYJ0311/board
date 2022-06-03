@@ -59,6 +59,7 @@ public class StudentsRestController {
 //	http://localhost:8080/api/v1/students?pageNum=1&pageSize=10
 	
 	// 학생 조회 map으로 리턴해보기
+	@CrossOrigin
 	@GetMapping("/students/map")
 	public List<Map<String, Object>> callStudentsListByMap(HttpSession httpSession){
 //		세션 데이터 가져오기. 나중에 할 예정
@@ -71,20 +72,32 @@ public class StudentsRestController {
 	}
 	
 //	특정 학생 조회(pk로 조회할 것임)
+	@CrossOrigin
 	@GetMapping("/students/id/{id}")
 	public StudentsVO callStudents(@PathVariable("id") int studentsId) {
 		return studentService.getStudents(studentsId);
 	}
 	
 //	특정 학생 삭제
+	@CrossOrigin
 	@DeleteMapping("/students/id/{id}")
 	public int callRemoveStudents(@PathVariable("id") int studentsId) {
 		return studentService.deleteStudents(studentsId);
 	}
 	
 //	특정 학생 수정
+	@CrossOrigin
 	@PatchMapping("/students/id/{id}")
 	public int callUpdateStudents(@PathVariable("id") int studentsId, @RequestBody StudentsVO vo) {
 		return studentService.getUpdateStudents(vo, studentsId);
+	}
+	
+//	쿼리 스트링을 사용해서 검색한 학생 게시판 리스트 조회
+//	/students/search?name=작성자이름 로 조회가능
+//	작성자이름을 빈칸으로 하면 전체조회가 된다.
+	@CrossOrigin
+	@GetMapping("/students/search")
+	public List<Map<String, Object>> callStudentsSearch(@RequestParam("name") String StudentsName){
+		return studentService.getStudentsInfo(StudentsName);
 	}
 }

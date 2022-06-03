@@ -30,4 +30,19 @@ CREATE TABLE IF NOT EXISTS board(
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 -- ENGINE과 CHARSET은 입력하지 않아도 자동으로 설정되지만, 엔진을 변경하거나 인코딩 포맷을 변경할 때 사용한다.
 
+-- 접속이력 테이블
+CREATE TABLE IF NOT EXISTS board_logs
+(
+	log_id BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY COMMENT '로그 아이디',
+	ip VARCHAR(50) COMMENT '아이피',
+	latitude VARCHAR(20) COMMENT '위도',
+	longitude VARCHAR(20) COMMENT '경도',
+	url VARCHAR(100) COMMENT '요청 url',
+	http_method VARCHAR(10) COMMENT 'http method',
+	create_at DATETIME COMMENT '접속 시간'
+--	create_at은 default값이 없음
+--	이유) 실제로 접속한 시간과, 자바 처리하는 시간때문에 delay된 insert 시간이 다르기 때문.
+--	서버에서 시간을 구한다음에 insert할 것임
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- 이제 프로젝트를 실행하면 DB에 테이블이 생성된다.
