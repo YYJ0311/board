@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS board(
     content VARCHAR(100) COMMENT '글 내용',
     update_at DATETIME COMMENT '수정 날짜',
     create_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '작성 날짜',
+    cnt integer(4) DEFAULT 0 COMMENT '조회수',
     CONSTRAINT board_students_id_fk FOREIGN KEY (students_id) REFERENCES students(students_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 -- ENGINE과 CHARSET은 입력하지 않아도 자동으로 설정되지만, 엔진을 변경하거나 인코딩 포맷을 변경할 때 사용한다.

@@ -43,17 +43,20 @@ public class StudentsService {
 		return studentsMapper.selectStudents(studentsId);
 	}
 	
-//	특정 학생 삭제
-	@Transactional(rollbackFor = {Exception.class})
-	public int deleteStudents(int studentsId) {
-		return studentsMapper.deleteStudents(studentsId);
-	}
-	
 //	특정 학생 수정
 	@Transactional(rollbackFor = {Exception.class})
 	public int getUpdateStudents(StudentsVO vo, int studentsId) {
 		vo.setStudentsId(studentsId);
+		String password = vo.getStudentsPassword();
+		password = passwordEncoder.encode(password);
+		vo.setStudentsPassword(password);
 		return studentsMapper.updateStudents(vo);
+	}
+	
+//	특정 학생 삭제
+	@Transactional(rollbackFor = {Exception.class})
+	public int deleteStudents(int studentsId) {
+		return studentsMapper.deleteStudents(studentsId);
 	}
 	
 //	5.19
