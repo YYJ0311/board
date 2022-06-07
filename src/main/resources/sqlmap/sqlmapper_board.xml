@@ -28,14 +28,15 @@
 		SELECT
 			board_id AS boardId,
 			s.students_id AS studentsId,
-			s.students_name AS studentsName,
+			ifnull(s.students_name, "*탈퇴*") AS studentsName,
+		-- 	s.students_name AS studentsName,
 			b.title,
 			b.content,
 			IFNULL(DATE_FORMAT(b.update_at, '%Y-%m-%d  %H:%m:%s'), '-') AS updateAt,
 			DATE_FORMAT(b.create_at, '%Y-%m-%d  %H:%m:%s') AS createAt,
 			b.cnt
 		FROM board AS b
-		INNER JOIN students AS s
+		left JOIN students AS s
 		ON b.students_id = s.students_id
 		ORDER BY boardId DESC
 	</select>	   

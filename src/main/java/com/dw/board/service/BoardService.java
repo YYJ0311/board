@@ -55,9 +55,11 @@ public class BoardService {
 		return boardMapper.updateBoardViews(vo);
 	}
 //	studentsName로 보드 조회
-	public List<Map<String, Object>> getSearchBoardList(String studentsName){
+	public List<Map<String, Object>> getSearchBoardList(String studentsName, int pageNum, int pageSize){
+		PageHelper.startPage(pageNum, pageSize);
 		return boardMapper.selectSearchBoardList(studentsName);
 	}
+
 //	통계값(학생 수, 게시글 수, 작성자 수, 총 조회 수) 조회
 	public Map<String, Object> getBoardStatistics(){
 		return boardMapper.selectBoardStatistics();

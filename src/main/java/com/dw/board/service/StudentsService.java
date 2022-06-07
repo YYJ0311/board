@@ -77,7 +77,8 @@ public class StudentsService {
 		return true;
 	}
 	
-	public List<Map<String, Object>> getStudentsInfo(String studentsName){
+	public List<Map<String, Object>> getStudentsInfo(String studentsName, int pageNum, int pageSize){
+		PageHelper.startPage(pageNum, pageSize);
 		return studentsMapper.selectSearchStudentsInfo(studentsName);
 	}
 }

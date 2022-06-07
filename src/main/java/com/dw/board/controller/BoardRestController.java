@@ -81,10 +81,11 @@ public class BoardRestController {
 //	작성자이름을 빈칸으로 하면 전체조회가 된다.
 	@CrossOrigin
 	@GetMapping("/board/search")
-	public List<Map<String, Object>> callBoardSearch(@RequestParam("writer") String writer){
-		return boardService.getSearchBoardList(writer);
+	public PageInfo<Map<String, Object>> callBoardSearch(@RequestParam("writer") String writer, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize){
+		List<Map<String, Object>> list = boardService.getSearchBoardList(writer, pageNum, pageSize);
+		return new PageInfo<Map<String, Object>>(list);
 	}
-	
+
 //	게시판 통계 조회
 	@CrossOrigin
 	@GetMapping("/board/boardstatistics")

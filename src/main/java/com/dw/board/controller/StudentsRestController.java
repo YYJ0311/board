@@ -97,7 +97,9 @@ public class StudentsRestController {
 //	작성자이름을 빈칸으로 하면 전체조회가 된다.
 	@CrossOrigin
 	@GetMapping("/students/search")
-	public List<Map<String, Object>> callStudentsSearch(@RequestParam("name") String StudentsName){
-		return studentService.getStudentsInfo(StudentsName);
+	public PageInfo<Map<String, Object>> callStudentsSearch(@RequestParam("name") String StudentsName, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize){
+		List<Map<String, Object>> list = studentService.getStudentsInfo(StudentsName, pageNum, pageSize);
+//		return studentService.getStudentsInfo(StudentsName);
+		return new PageInfo<Map<String, Object>>(list);
 	}
 }
