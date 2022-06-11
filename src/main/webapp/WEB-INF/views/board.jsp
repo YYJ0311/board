@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<c:set var="path" value="${requestScope['javax.servlet.forward.servlet_path']}"/> 
+<!-- path에 현재 요청주소 저장 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="resources/static/css/board.css">
+    <link rel="stylesheet" href="/resources/static/css/board.css">
 </head>
 <body>
     <div class="container">
@@ -100,7 +102,7 @@
             <div class="search">
                 <label>
                     <input id="searchBar" type="text" placeholder="작성자를 검색하세요...">
-                    <input id="keyword" type="hidden" value="null">
+                    <input id="keyword" type="hidden" value="">
                 </label>
             </div>
             <div>
@@ -192,58 +194,35 @@
                      			</tr>
                      		</c:otherwise>
                      	</c:choose>
-                         <!-- <tr>
-                             <td>1</td>
-                             <td>현상원</td>
-                             <td>점심시간이 너무 짧아요!</td>
-                             <td>2022-05-19</td>
-                             <td>2022-05-18</td>
-                             <td><span class="high">8320</span></td>
-                         </tr>
-                         <tr>
-                            <td>2</td>
-                            <td>현상원</td>
-                            <td>학원에 커피기계가 없어요!</td>
-                            <td>2022-05-19</td>
-                            <td>2022-05-18</td>
-                            <td><span class="middle">1200</span></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>현상원</td>
-                            <td>너무 졸려요...</td>
-                            <td>2022-05-19</td>
-                            <td>2022-05-18</td>
-                            <td><span class="row">5</span></td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>현상원</td>
-                            <td>안녕하세요!</td>
-                            <td>2022-05-19</td>
-                            <td>2022-05-18</td>
-                            <td><span class="row">22</span></td>
-                        </tr> -->
-                        <!-- 더미 데이터는 지우지 않는다. -->
                      </tbody>
                  </table>
                  <div class="pagination">
-	                <c:if test="${pageHelper.hasPreviousPage}">
-	                 	<a onclick="getBoardList(${pageHelper.pageNum - 1}, 10)">Previous</a>
+                 	<c:if test="${path eq '/board'}">
+		                <c:if test="${pageHelper.hasPreviousPage}">
+		                	<a onclick="getBoardList(1, 10)">처음</a>
+		                 	<a onclick="getBoardList(${pageHelper.pageNum - 1}, 10)"> < </a>
+		                </c:if>
+		         			<c:forEach begin="${pageHelper.navigateFirstPage}" end="${pageHelper.navigateLastPage}" var="pageNum">
+		          				<a id="pageNum${pageNum}" onclick="getBoardList(${pageNum}, 10)">${pageNum}</a>
+		         			</c:forEach>
+		         		<c:if test="${pageHelper.hasNextPage}">
+		                	<a onclick="getBoardList(${pageHelper.pageNum + 1}, 10)"> > </a>
+		                	<a onclick="getBoardList(${pageHelper.pages}, 10)">끝</a>
+		                </c:if>
 	                </c:if>
-	         			<c:forEach begin="${pageHelper.navigateFirstPage}" end="${pageHelper.navigateLastPage}" var="pageNum">
-	          				<a id="pageNum${pageNum}" onclick="getBoardList(${pageNum}, 10)">${pageNum}</a>
-	         			</c:forEach>
-	         		<c:if test="${pageHelper.hasNextPage}">
-	                	<a onclick="getBoardList(${pageHelper.pageNum + 1}, 10)">Next</a>
+	                <c:if test="${path eq '/board/search'}">
+	                	<c:if test="${pageHelper.hasPreviousPage}">
+	                		<a onclick="getSerchedNavList(1, 10, '${param.writer}')">처음</a>
+		                 	<a onclick="getSerchedNavList(${pageHelper.pageNum - 1}, 10, '${param.writer}')"> < </a>
+		                </c:if>
+		         			<c:forEach begin="${pageHelper.navigateFirstPage}" end="${pageHelper.navigateLastPage}" var="pageNum">
+		          				<a id="pageNum${pageNum}" onclick="getSerchedNavList(${pageNum}, 10, '${param.writer}')">${pageNum}</a>
+		         			</c:forEach>
+		         		<c:if test="${pageHelper.hasNextPage}">
+		                	<a onclick="getSerchedNavList(${pageHelper.pageNum + 1}, 10, '${param.writer}')"> > </a>
+		                	<a onclick="getSerchedNavList(${pageHelper.pages}, 10, '${param.writer}')">끝</a>
+		                </c:if>
 	                </c:if>
-	                   <!-- <a href="#">Previous</a>
-	                   <a href="#">1</a>
-	                   <a href="#">2</a>
-	                   <a href="#">3</a>
-	                   <a href="#">4</a>
-	                   <a href="#">5</a>
-	                   <a href="#">Next</a> -->
                  </div>
                  <input id="nowPageNum" type="hidden" value="${pageHelper.pageNum}">
              </div>
@@ -290,10 +269,7 @@
 	            $('#viewsCnt').text(response.viewsCnt)
 	            // input을 컨트롤할 때 val() 사용
 	            // text() or html()은 input을 제외한 태그를 컨트롤할 때 사용.
-	        },
-	        error : function (request, status, error){
-	            console.log("에러 내용은 ===>" + error);
-	        },
+	        }
 	    });
 	}
 
@@ -305,18 +281,35 @@
 		$('#pageNum'+pageNum).css('color', '#fff');
 	}
 	
-// 게시판 리스트
+// 게시판 리스트 조회
 	function getBoardList(pageNum, pageSize){
-		location.href="/board?pageNum="+pageNum+"&pageSize="+pageSize;
+		//keyword = $('#keyword').val();
+		//if(keyword == ''){
+			location.href="/board?pageNum="+pageNum+"&pageSize="+pageSize;
+		//}
+		//if(keyword !== ''){
+		//	location.href="/board/search?writer="+keyword+"&pageNum="+pageNum+"&pageSize="+pageSize;
+		//}
 	}
-	
+
+// 게시판 작성자 검색 리스트 조회
+	function getSearchedList(pageNum, pageSize){
+		var search = $('#searchBar').val().trim();
+		$('#keyword').val(search);
+		var keyword = $('#keyword').val(); 
+		location.href="/board/search?writer="+keyword+"&pageNum="+pageNum+"&pageSize="+pageSize;
+	}
+	function getSerchedNavList(pageNum, pageSize, writer){
+		location.href="/board/search?writer="+writer+"&pageNum="+pageNum+"&pageSize="+pageSize;
+	}
 	$('#searchBar').keyup(function(key){
 		var pageNum = 1;
 		var pageSize = 10;
         if(key.keyCode == 13){ // 엔터 == 13
             var search = $('#searchBar').val().trim();
             if(search != ''){
-				location.href="/board/search?writer="+search+"pageNum="+pageNum+"&pageSize="+pageSize;
+            	$('#keyword').val(search);
+            	getSearchedList(pageNum, pageSize)
             }
         }
     })
@@ -358,7 +351,7 @@
         var title = $("#title").val();
         var content = $("#content").val();
         var studentsId = 23;
-        // studentsId = 1; // 집에서 쓰는 번호
+        studentsId = 11; // 집에서 쓰는 번호
         
         if(studentsName == ""){
           alert("작성자를 입력해주세요.");
@@ -372,12 +365,12 @@
           alert("내용을 입력해주세요.");
           return false;
         }
+        var jsonData = {
+            "studentsId" : studentsId,
+            "title" : title,
+            "content" : content
+        }
         if(confirm('게시글을 작성하시겠습니까?')){
-            var jsonData = {
-                "studentsId" : studentsId,
-                "title" : title,
-                "content" : content
-            }
             $.ajax({
                 url : "/api/v1/board",
                 type : "POST",
@@ -445,5 +438,16 @@
 	        });
         }
     });
+    
+// esc 누르면 팝업 닫기
+    $(document).keydown(function(key){
+        if(key.keyCode == 27){
+            // window.close();
+            // window.location.reload();
+            $('.update-popup').css('display', 'none')
+            $('.write-popup').css('display', 'none')
+            return false;
+        }
+    })
 </script>
 </html>

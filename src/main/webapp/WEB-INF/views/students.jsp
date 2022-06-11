@@ -65,7 +65,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/board">
+                    <a href="/board?pageNum=1&pageSize=10">
                         <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
                         <span class="title">Dashboard</span>                
                     </a>
