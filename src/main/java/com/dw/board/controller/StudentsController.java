@@ -9,39 +9,32 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.dw.board.service.BoardService;
+import com.dw.board.service.StudentsService;
 import com.github.pagehelper.PageInfo;
 
 @Controller
-public class BoardController {
-	
+public class StudentsController {
 	@Autowired
-	private BoardService boardService;
+	private StudentsService studentService;
 	
-	@GetMapping("/home")
-	public String callHomepage() {
-		return "index";
-//		index.jsp의 파일명
-	}
-	
-	@GetMapping("/board")
-	public String callBoardPage(ModelMap map, 
+	@GetMapping("/students")
+	public String callStudentsList(ModelMap map,
 			@RequestParam("pageNum") int pageNum, 
-			@RequestParam("pageSize") int pageSize) {
-		List<Map<String, Object>> list = boardService.getAllBoardList(pageNum, pageSize);
+			@RequestParam("pageSize") int pageSize){
+		List<Map<String, Object>> list = studentService.getAllStudentsList(pageNum, pageSize);
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		map.addAttribute("pageHelper", pageInfo);
-		return "board";
+		return "students";
 	}
 	
-	@GetMapping("/board/search")
-	public String callSearchedBoardPage(ModelMap map, 
-			@RequestParam("writer") String writer, 
+	@GetMapping("/students/search")
+	public String callSearchedBoardPage(ModelMap map,
+			@RequestParam("name") String name, 
 			@RequestParam("pageNum") int pageNum, 
 			@RequestParam("pageSize") int pageSize) {
-		List<Map<String, Object>> list = boardService.getSearchBoardList(writer, pageNum, pageSize);
+		List<Map<String, Object>> list = studentService.getStudentsInfo(name, pageNum, pageSize);
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		map.addAttribute("pageHelper", pageInfo);
-		return "board";
+		return "students";
 	}
 }

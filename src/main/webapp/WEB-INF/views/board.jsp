@@ -71,7 +71,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/students">
+                    <a href="/students?pageNum=1&pageSize=10">
                         <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
                         <span class="title">Students</span>                
                     </a>
@@ -283,13 +283,7 @@
 	
 // 게시판 리스트 조회
 	function getBoardList(pageNum, pageSize){
-		//keyword = $('#keyword').val();
-		//if(keyword == ''){
-			location.href="/board?pageNum="+pageNum+"&pageSize="+pageSize;
-		//}
-		//if(keyword !== ''){
-		//	location.href="/board/search?writer="+keyword+"&pageNum="+pageNum+"&pageSize="+pageSize;
-		//}
+		location.href="/board?pageNum="+pageNum+"&pageSize="+pageSize;
 	}
 
 // 게시판 작성자 검색 리스트 조회

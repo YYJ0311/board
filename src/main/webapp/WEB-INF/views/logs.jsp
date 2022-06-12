@@ -8,8 +8,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="resources/static/css/board.css">
+    <title>Logs</title>
+    <link rel="stylesheet" href="/resources/static/css/board.css">
 </head>
 <body>
     <div class="container">
@@ -48,13 +48,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/students">
+                    <a href="/students?pageNum=1&pageSize=10">
                         <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
                         <span class="title">Students</span>                
                     </a>
                 </li>
                 <li>
-                    <a href="/logs">
+                    <a href="/logs?pageNum=1&pageSize=20">
                         <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
                         <span class="title">logs</span>                
                     </a>
@@ -102,38 +102,35 @@
                          </tr>
                      </thead>
                      <tbody id="boardData">
-                         <!-- <tr onclick="getPopup()">
-                            <td>1</td>
-                            <td>192.158.0.252</td>
-                            <td>/board</td>
-                            <td>GET</td>
-                            <td>2022-05-19 13:33:02</td>
-                         </tr>
-                         <tr onclick="getPopup()">
-                            <td>2</td>
-                            <td>192.158.0.252</td>
-                            <td>/board</td>
-                            <td>GET</td>
-                            <td>2022-05-19 13:33:02</td>
-                        </tr>
-                        <tr onclick="getPopup()">
-                            <td>3</td>
-                            <td>192.158.0.252</td>
-                            <td>/board</td>
-                            <td>GET</td>
-                            <td>2022-05-19 13:33:02</td>
-                        </tr> -->
+                     	<c:choose>
+                     		<c:when test="${fn:length(pageHelper.list) > 0}">
+                     			<c:forEach items="${pageHelper.list}" var="item">
+                     				<tr onclick="getPopup(${item.log_id})">
+                     					<td>${item.log_id}</td>
+                     					<td>${item.ip}</td>
+                     					<td>${item.url}</td>
+                     					<td>${item.http_method}</td>
+                     					<td>${item.create_at}</td>
+                     				</tr>
+                     			</c:forEach>
+                     		</c:when>
+                     	</c:choose>
                      </tbody>
                  </table>
                  <div class="pagination">
-                    <a href="#">Previous</a>
-                    <a href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">5</a>
-                    <a href="#">Next</a>
+		                <c:if test="${pageHelper.hasPreviousPage}">
+		                	<a onclick="getLogsList(1, 20)">처음</a>
+		                 	<a onclick="getLogsList(${pageHelper.pageNum - 1}, 20)"> < </a>
+		                </c:if>
+		         			<c:forEach begin="${pageHelper.navigateFirstPage}" end="${pageHelper.navigateLastPage}" var="pageNum">
+		          				<a id="pageNum${pageNum}" onclick="getLogsList(${pageNum}, 20)">${pageNum}</a>
+		         			</c:forEach>
+		         		<c:if test="${pageHelper.hasNextPage}">
+		                	<a onclick="getLogsList(${pageHelper.pageNum + 1}, 20)"> > </a>
+		                	<a onclick="getLogsList(${pageHelper.pages}, 20)">끝</a>
+		                </c:if>
                  </div>
+                 <input id="nowPageNum" type="hidden" value="${pageHelper.pageNum}">
              </div>
          </div>
     </div>
@@ -147,6 +144,9 @@
     ></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a73b8837893f3cb09f044c404d50bca2"></script>
 <script>
+	$('.btn-cancel').click(function(){
+	    $('.logs-popup').css('display', 'none');
+	});
     let list = document.querySelectorAll('.navigation li');
     function activeLink(){
         list.forEach((item) => {item.classList.remove('hovered')});
@@ -155,13 +155,24 @@
     list.forEach((item) => {item.addEventListener('mouseover',activeLink)});
 </script>
 <script>
+//페이지 css 넣기
+	getPageNum();
+	function getPageNum(){
+		var pageNum = $('#nowPageNum').val(); // 현재 페이지번호
+		$('#pageNum'+pageNum).css('backgroundColor', '#287bff');
+		$('#pageNum'+pageNum).css('color', '#fff');
+	}
+    
+    function getLogsList(pageNum, pageSize){
+    	location.href="/logs?pageNum="+pageNum+"&pageSize="+pageSize;
+    }
+    
     function getPopup(logId){
         $.ajax({
-            url : "http://localhost:8080/api/v1/logs/logId/"+ logId,
+            url : "/api/v1/logs/logId/"+ logId,
             type : "GET",
             dataType : "json", // 서버 결과를 json으로 응답받겠다.
             success : function (response){
-                // console.log(response);
                 var latitude = response.latitude;
                 var longitude = response.longitude;
                 $("#ip").val(response.ip);
@@ -190,58 +201,13 @@
             }
         })
     }
-    
-    $('.btn-cancel').click(function(){
-        $('.logs-popup').css('display', 'none');
-    });
 
-    getLogsList(1, 10);
-    function getLogsList(pageNum, pageSize){
-        $.ajax({
-            url : "http://localhost:8080/api/v1/logs?pageNum="+pageNum+"&pageSize="+pageSize,
-            type : "GET",
-            dataType : "json", // 서버 결과를 json으로 응답받겠다.
-            success : function (response){
-                console.log(response)
-                let html = "";
-                if(response.list.length > 0){
-                    for(var i=0; i<response.list.length; i++){
-                        html +=
-                            '<tr onclick=getPopup('+ response.list[i].log_id +')><td>' + response.list[i].log_id +
-                            '</td><td>' + response.list[i].ip + 
-                            '</td><td>' + response.list[i].url + 
-                            '</td><td>' + response.list[i].http_method +
-                            '</td><td>' + response.list[i].create_at + '</td></tr>';
-                    }
-                    var paginationHtml = "";
-                    if(response.hasNextPage && response.hasPreviousPage){
-                        paginationHtml += '<a onclick="getLogsList('+1+','+pageSize+')" href="#">처음</a>'
-                    }
-                    if(response.hasPreviousPage){
-                        paginationHtml += '<a onclick="getLogsList('+(response.pageNum-1)+','+pageSize+')" href="#">Previous</a>';
-                    }
-                    for(var i=0; i<response.navigatepageNums.length; i++){
-                        paginationHtml += '<a id="pageNum'+response.navigatepageNums[i]+'" onclick="getLogsList('+response.navigatepageNums[i]+','+pageSize+')" href="#">'+response.navigatepageNums[i]+'</a>'
-                        // id로 pageNum + 파라미터로 받아온 페이지 숫자를 줌
-                    }
-                    if(response.hasNextPage){
-                        paginationHtml += '<a onclick="getLogsList('+(response.pageNum+1)+','+pageSize+')" href="#">Next</a>';
-                    }
-                    if(response.hasNextPage && response.hasPreviousPage){
-                        paginationHtml += '<a onclick="getLogsList('+response.pages+','+pageSize+')" href="#">끝</a>'
-                    }
-                    $(".pagination").children().remove();
-                    $(".pagination").append(paginationHtml);
-                    // 페이지 번호에 맞게 css 수정
-                    $('#pageNum'+pageNum).css('backgroundColor', '#287bff');
-                    $('#pageNum'+pageNum).css('color', '#fff');
-                }else{
-                    html += '<tr><td colspan=6 style="text-align: center;"><br><br>게시글이 없습니다.</td></tr>';
-                }
-            $("#boardData").children().remove();
-            $("#boardData").append(html);
-            }
-        });
-    }
+// esc 팝업 닫기
+    $(document).keydown(function(key){
+        if(key.keyCode == 27){
+        	$('.logs-popup').css('display', 'none');
+            return false;
+        }
+    })
 </script>
 </html>

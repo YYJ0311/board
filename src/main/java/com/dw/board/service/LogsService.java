@@ -28,10 +28,4 @@ public class LogsService {
 		List<Map<String, Object>> list = logsMapper.selectBoardLogs(logId);
 		return list.get(0);
 	}
-	
-	public int sangwon() {
-		int array[] = {10, 20 ,30};
-		int x = array[1];
-		return x; // 20
-	}
 }

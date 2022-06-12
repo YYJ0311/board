@@ -2,14 +2,15 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<c:set var="path" value="${requestScope['javax.servlet.forward.servlet_path']}"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="resources/static/css/board.css">
+    <title>Students</title>
+    <link rel="stylesheet" href="/resources/static/css/board.css">
 </head>
 <body>
     <div class="container">
@@ -71,13 +72,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/students">
+                    <a href="/students?pageNum=1&pageSize=10">
                         <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
                         <span class="title">Students</span>                
                     </a>
                 </li>
                 <li>
-                    <a href="/logs">
+                    <a href="/logs?pageNum=1&pageSize=20">
                         <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
                         <span class="title">logs</span>                
                     </a>
@@ -124,32 +125,53 @@
                         </tr>
                      </thead>
                      <tbody id="boardData">
-                         <!-- <tr>
-                             <td>hyunsangwon</td>
-                             <td>현상원</td>
-                             <td>2022-05-19</td>
-                         </tr>
-                         <tr>
-                            <td>hyunsangwon</td>
-                            <td>현상원</td>
-                            <td>2022-05-19</td>
-                        </tr>
-                        <tr>
-                            <td>hyunsangwon</td>
-                            <td>현상원</td>
-                            <td>2022-05-19</td>
-                        </tr> -->
+						<c:choose>
+                     		<c:when test="${fn:length(pageHelper.list) > 0}">
+                     			<c:forEach items="${pageHelper.list}" var="item">
+	                     			<tr onclick="getStudents(${item.studentsId})">
+                     					<td>${item.studentsId}</td>
+                     					<td>${item.studentsName}</td>
+                     					<td>${item.createAt}</td>
+	                     			</tr>
+                     			</c:forEach>
+                     		</c:when>
+                     		<c:otherwise>
+                     			<tr>
+                     				<td colspan="3">학생이 없습니다.</td>
+                     			</tr>
+                     		</c:otherwise>
+                     	</c:choose>
                      </tbody>
                  </table>
                  <div class="pagination">
-                    <!-- <a href="#">Previous</a>
-                    <a href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">5</a>
-                    <a href="#">Next</a> -->
+                 	<c:if test="${path eq '/students'}">
+		                <c:if test="${pageHelper.hasPreviousPage}">
+		                	<a onclick="getStudentsList(1, 10)">처음</a>
+		                 	<a onclick="getStudentsList(${pageHelper.pageNum - 1}, 10)"> < </a>
+		                </c:if>
+		         			<c:forEach begin="${pageHelper.navigateFirstPage}" end="${pageHelper.navigateLastPage}" var="pageNum">
+		          				<a id="pageNum${pageNum}" onclick="getStudentsList(${pageNum}, 10)">${pageNum}</a>
+		         			</c:forEach>
+		         		<c:if test="${pageHelper.hasNextPage}">
+		                	<a onclick="getStudentsList(${pageHelper.pageNum + 1}, 10)"> > </a>
+		                	<a onclick="getStudentsList(${pageHelper.pages}, 10)">끝</a>
+		                </c:if>
+	                </c:if>
+	                <c:if test="${path eq '/students/search'}">
+	                	<c:if test="${pageHelper.hasPreviousPage}">
+	                		<a onclick="getSerchedNavList(1, 5, '${param.name}')">처음</a>
+		                 	<a onclick="getSerchedNavList(${pageHelper.pageNum - 1}, 5, '${param.name}')"> < </a>
+		                </c:if>
+		         			<c:forEach begin="${pageHelper.navigateFirstPage}" end="${pageHelper.navigateLastPage}" var="pageNum">
+		          				<a id="pageNum${pageNum}" onclick="getSerchedNavList(${pageNum}, 5, '${param.name}')">${pageNum}</a>
+		         			</c:forEach>
+		         		<c:if test="${pageHelper.hasNextPage}">
+		                	<a onclick="getSerchedNavList(${pageHelper.pageNum + 1}, 5, '${param.name}')"> > </a>
+		                	<a onclick="getSerchedNavList(${pageHelper.pages}, 5, '${param.name}')">끝</a>
+		                </c:if>
+	                </c:if>
                  </div>
+                 <input id="nowPageNum" type="hidden" value="${pageHelper.pageNum}">
              </div>
          </div>
     </div>
@@ -179,11 +201,19 @@
     list.forEach((item) => {item.addEventListener('mouseover',activeLink)});
 </script>
 <script>
+//페이지 css 넣기
+	getPageNum();
+	function getPageNum(){
+		var pageNum = $('#nowPageNum').val(); // 현재 페이지번호
+		$('#pageNum'+pageNum).css('backgroundColor', '#287bff');
+		$('#pageNum'+pageNum).css('color', '#fff');
+	}
+
 // 학생 수 구해서 "학생명단" 옆에 붙임
     getStudentListCount(); 
     function getStudentListCount(){
         $.ajax({
-            url : "http://localhost:8080/api/v1/students/map",
+            url : "/api/v1/students/map",
             type : "GET",
             dataType : "json",
             success : function (response){
@@ -192,103 +222,28 @@
         })
     }
 
-// 학생 리스트 전체 조회
-    getStudentList(1, 10);
-    function getStudentList(pageNum, pageSize){
-        $.ajax({
-            url : "http://localhost:8080/api/v1/students?pageNum="+pageNum+"&pageSize="+pageSize,
-            type : "GET",
-            dataType : "json",
-            success : function (response){
-                let html = "";
-                if(response.list.length > 0){
-                    for(var i=0; i<response.list.length; i++){
-                        html += 
-                            '<tr onclick=getStudents('+response.list[i].studentsId+')><td>'+
-                            response.list[i].studentsId + '</td><td>' + 
-                            response.list[i].studentsName + '</td><td>' + 
-                            response.list[i].createAt.replace("T"," ")+'</td></tr>'
-                    }
-                    var paginationHtml = "";
-                    if(response.hasPreviousPage){
-                        paginationHtml += '<a onclick="getStudentList('+(response.pageNum-1)+','+pageSize+')" href="#">Previous</a>';
-                    }
-                    for(var i=0; i<response.navigatepageNums.length; i++){
-                        paginationHtml += '<a id="pageNum'+response.navigatepageNums[i]+'" onclick="getStudentList('+response.navigatepageNums[i]+','+pageSize+')" href="#">'+response.navigatepageNums[i]+'</a>'
-                    }
-                    if(response.hasNextPage){
-                        paginationHtml += '<a onclick="getStudentList('+(response.pageNum+1)+','+pageSize+')" href="#">Next</a>';
-                    }
-                    $('.pagination').children().remove();
-                    $('.pagination').append(paginationHtml);
-                }else{
-                    html += '<tr><td colspan=6 style="text-align: center;"><br><br>학생이 없습니다.</td></tr>';
-                }
-                $('#boardData').children().remove();
-                $('#boardData').append(html);
-                $('#pageNum'+pageNum).css('backgroundColor', '#287bff');
-                $('#pageNum'+pageNum).css('color', '#fff');
-            },
-            error : function (request, status, error){
-                console.log("에러 내용은 ===>" + error);
-            },
-        });
-    }
+// 게시판 리스트 조회
+	function getStudentsList(pageNum, pageSize){
+		location.href="/students?pageNum="+pageNum+"&pageSize="+pageSize;
+	}
 
-// 학생 검색
-    // 엔터 누르면 검색한 학생 리스트 만들기
+// 검색한 학생에 대한 리스트 만들기
     $('#searchBar').keyup(function(key){
         if(key.keyCode == 13){ // 엔터 == 13
-            getSearchedStudentList(1,3)
+        	var search = $('#searchBar').val().trim();
+	        if(search != '') {
+	            getSearchedStudentList(1,5)
+	        }
         }
     })
-    // 검색한 학생에 대한 리스트 만들기
+    function getSerchedNavList(pageNum, pageSize, name){
+    	location.href="/students/search?name="+name+"&pageNum="+pageNum+"&pageSize="+pageSize;
+	}
     function getSearchedStudentList(pageNum, pageSize){
-        var search = $('#searchBar').val();
-        if(search == '') {
-            alert('검색어 입력해주세요');
-            return false;
-        }
-        $.ajax({
-            url : "http://localhost:8080/api/v1/students/search?name="+search+"&pageNum="+pageNum+"&pageSize="+pageSize,
-            type : "GET",
-            dataType : "json", // 서버 결과를 json으로 응답받겠다.
-            success : function (response){
-                // console.log(response)
-                let html = "";
-                if(response.list.length >0){
-                    for(var i=0; i<response.list.length; i++){
-                        html += 
-                            '<tr onclick=getStudents('+response.list[i].studentsId+')><td>'+
-                            +response.list[i].studentsId+'</td><td>'
-                            +response.list[i].studentsName+'</td><td>'
-                            +response.list[i].createAt.replace("T"," ")+'</td></tr>'
-                    }
-                    var paginationHtml = "";
-                    if(response.hasPreviousPage){
-                        paginationHtml += '<a onclick="getSearchedStudentList('+(response.pageNum-1)+','+pageSize+')" href="#">Previous</a>';
-                    }
-                    for(var i=0; i<response.navigatepageNums.length; i++){
-                        paginationHtml += '<a id="pageNum'+response.navigatepageNums[i]+'" onclick="getSearchedStudentList('+response.navigatepageNums[i]+','+pageSize+')" href="#">'+response.navigatepageNums[i]+'</a>'
-                    }
-                    if(response.hasNextPage){
-                        paginationHtml += '<a onclick="getSearchedStudentList('+(response.pageNum+1)+','+pageSize+')" href="#">Next</a>';
-                    }
-                    $('.pagination').children().remove();
-                    $('.pagination').append(paginationHtml);
-                    $('#pageNum'+pageNum).css('backgroundColor', '#287bff');
-                    $('#pageNum'+pageNum).css('color', '#fff');
-                }else{
-                    html += '<tr><td colspan=6 style="text-align: center;"><br><br>존재하지 않는 학생입니다.</td></tr>';
-                }
-                $("#boardData").children().remove();
-                $("tbody").append(html);
-            },
-            error : function (request, status, error){
-                console.log("에러 내용은 ===>" + error);
-            },
-        });
-    } 
+    	var search = $('#searchBar').val().trim();
+    	console.log(search)
+        location.href="/students/search?name="+search+"&pageNum="+pageNum+"&pageSize="+pageSize;
+    }
 
 // 학생 추가
     $("#contentSubmit").click(function(){
@@ -309,7 +264,7 @@
                 "studentsPassword" : studentsPassword
             }
             $.ajax({
-                url : "http://localhost:8080/api/v1/students",
+                url : "/api/v1/students",
                 type : "POST",
                 contentType : "application/json", // 서버에 json 타입으로 보낼 예정(요청)
                 dataType : "json", // 서버 결과를 json으로 응답받겠다.
@@ -321,7 +276,7 @@
                         $("#insertStudentsName").val("");
                         $("#studentPassword").val("");
                         $("#boardData").children().remove();
-                        getStudentList(1, 5);
+                        location.reload();
                     }
                 }  
             })
@@ -332,7 +287,7 @@
     function getStudents(studentsId){
         $('.update-popup').css('display', 'block')
         $.ajax({
-            url : "http://localhost:8080/api/v1/students/id/" + studentsId,
+            url : "/api/v1/students/id/" + studentsId,
             type : "GET",
             dataType : "json",
             success : function (response){
@@ -341,14 +296,11 @@
                 $("#studentsName").val(response.studentsName);
                 $("#studentsPassword").val(response.studentsPassword);
                 $("#studentsIdHidden").val(studentsId);
-            },
-            error : function (request, status, error){
-                console.log("에러 내용은 ===>" + error);
-            },
+            }
         });
     }
 
-// 학생 정보 수정
+// 학생 수정
     $("#contentUpdate").click(function(){
         var studentsId = $("#studentsIdHidden").val();
         var studentsName = $("#studentsName").val();
@@ -358,46 +310,47 @@
                 studentsPassword : studentsPassword
         };
         $.ajax({
-            url : "http://localhost:8080/api/v1/students/id/" + studentsId,
+            url : "/api/v1/students/id/" + studentsId,
             type : "PATCH",
             contentType : "application/json",
             dataType : "json",
             data : JSON.stringify(jsonData),
             success : function(response){
-                console.log(response)
                 if(response > 0){
                     alert('수정 완료');
                     $('.update-popup').css('display', 'none')
                     $("#boardData").children().remove(); 
-                    getStudentList(1, 5);
+                    location.reload();
                 }
-            },
-            error : function (request, status, error){
-                console.log("에러 내용은 ===>" + error);
             },
         });
     });
 
-// 학생 정보 삭제
+// 학생 삭제
     $("#contentDelete").click(function(){
         var studentsId = $("#studentsIdHidden").val();
         if(confirm("학생이 작성한 게시글은 DB에 남아있습니다.\n삭제하시겠습니까?")){ // \n : 줄바꿈
             $.ajax({
-                url : "http://localhost:8080/api/v1/students/id/" + studentsId,
+                url : "/api/v1/students/id/" + studentsId,
                 type : "DELETE",
                 dataType : "json",
                 success : function(response){
                     alert('삭제 완료');
                     $('.update-popup').css('display','none');
                     $("#boardData").children().remove();
-                    getStudentList(1, 5);
+                    location.reload();
                 },
-                error : function(){
-                    alert("오류");
-                    return 0;
-                }
             });
         }
     });
+    
+// esc 누르면 팝업 닫기
+    $(document).keydown(function(key){
+        if(key.keyCode == 27){
+            $('.update-popup').css('display', 'none')
+            $('.write-popup').css('display', 'none')
+            return false;
+        }
+    })
 </script>
 </html>
