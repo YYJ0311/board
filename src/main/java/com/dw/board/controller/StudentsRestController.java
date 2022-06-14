@@ -31,11 +31,12 @@ public class StudentsRestController {
 	@CrossOrigin
 	@PostMapping("/login")
 	public boolean callIsLogin(@RequestBody StudentsVO vo, HttpSession httpSession) {
-		boolean isLogin = studentService.isStudents(vo);
-		if(isLogin) {
-			httpSession.setAttribute("name", "YooYoungJoon"); // session에 name 추가. (key, value)로 입력.
-		}
-		return studentService.isStudents(vo);
+		boolean isLogin = studentService.isStudents(vo, httpSession);
+//		if(isLogin) {
+//			httpSession.setAttribute("name", "YooYoungJoon"); // session에 name 추가. (key, value)로 입력.
+//		}
+//		return studentService.isStudents(vo);
+		return isLogin;
 	}
 	
 //	학생 저장
@@ -102,4 +103,6 @@ public class StudentsRestController {
 //		return studentService.getStudentsInfo(StudentsName);
 		return new PageInfo<Map<String, Object>>(list);
 	}
+	
+
 }

@@ -1,10 +1,13 @@
 package com.dw.board.utils;
 
+import org.springframework.stereotype.Component;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Component
 public class PageHandler {
 	private int total; // 전체 게시물 수
 	private int pageNum; // 현재 페이지

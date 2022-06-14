@@ -26,4 +26,8 @@ public interface BoardMapper {
 //	파라미터가 1개일 땐 @Param 생략가능. 2개 이상이면 써줘야 한다.
 	
 	public Map<String, Object> selectBoardStatistics();
+	
+	public int selectAllBoardTotal();
+	
+	public List<Map<String, Object>> selectAllBoardListTest(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 }

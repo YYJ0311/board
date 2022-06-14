@@ -8,7 +8,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/resources/static/css/Login.css" />
+    <link rel="stylesheet" href="/resources/static/css/login.css" />
     <title>게시판 로그인</title>
   </head>
   <body>
@@ -73,7 +73,7 @@
             console.log(response)
             if(response){
               alert("환영합니다!")
-              location.href = "/board"; // 페이지 이동
+              location.href = "/board?pageNum=1&pageSize=10"; // 페이지 이동
             }else{
               alert("이름과 비밀번호를 확인해 주세요");
             }

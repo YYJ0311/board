@@ -3,6 +3,8 @@ package com.dw.board.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -61,7 +63,7 @@ public class StudentsService {
 	
 //	5.19
 //	가입된 학생인지 여부 체크
-	public boolean isStudents(StudentsVO vo) {
+	public boolean isStudents(StudentsVO vo, HttpSession httpSession) {
 		StudentsVO student = studentsMapper.selectStudentsOne(vo);
 		if(student == null) { // 회원이 없다면(쿼리결과가 null이면)
 			return false;
@@ -74,6 +76,8 @@ public class StudentsService {
 //			따라서 만약 matches 안에 두 비밀번호가 문자 그대로 같다면(encoding 하기 전부터 같다면, 예를들어 (123,123)) matches는 false를 리턴한다.
 			return false;
 		}
+		httpSession.setAttribute("studentsId", student.getStudentsId());
+		httpSession.setAttribute("studentsName", student.getStudentsName());
 		return true;
 	}
 	
