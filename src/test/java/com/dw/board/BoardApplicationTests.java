@@ -35,20 +35,21 @@ class BoardApplicationTests {
 		int pageNum = 1;
 		int pageSize = 10;
 		int navigatePages = 5; // 한 블럭에 페이지 5개
-		pageHandler.setTotal(total);
+		pageHandler.setTotal(total); // pageHandler의 total값을 지정해줌
 		pageHandler.setPageNum(pageNum);
 		pageHandler.setPageSize(pageSize);
 		pageHandler.setNavigatePages(navigatePages);
 		
-		pageHandler.setNowBlock(pageNum);
+		pageHandler.setNowBlock(pageNum); // pageNum으로 현재 블럭 구함
+											// 파라미터로 navigatePages를 받지 않지만, 바로 위에서 navigatePages를 set 해줘서 사용 가능함
 		int nowBlock = pageHandler.getNowBlock();
 		System.out.println("현재 블록 => "+ nowBlock);
 		
-		pageHandler.setLastBlock(total);
+		pageHandler.setLastBlock(total); // total로 마지막 블럭 구함
 		int lastBlock = pageHandler.getLastBlock();
 		System.out.println("마지막 블록 => "+ lastBlock);
 		
-		pageHandler.setStartPage(nowBlock);
+		pageHandler.setStartPage(nowBlock); // nowBlock으로 
 		int startPage = pageHandler.getStartPage();
 		System.out.println("시작 페이지 => "+ startPage);
 		

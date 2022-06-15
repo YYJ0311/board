@@ -58,10 +58,10 @@ public class PageHandler {
 		this.startPage = (nowBlock * this.navigatePages) - (this.navigatePages -1);
 	}
 	// 현재 블럭의 마지막 페이지
-	public void setEndPage(int nowBlock, int total) {
+	public void setEndPage(int nowBlock, int pages) {
 		this.endPage = nowBlock * this.navigatePages;
 		if(nowBlock == this.lastBlock) { // 마지막 블록이라면 마지막 페이지로 총 페이지 수 대입
-			this.endPage = total;
+			this.endPage = pages;
 		}
 	}
 	

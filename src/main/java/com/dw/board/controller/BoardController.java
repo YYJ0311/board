@@ -39,6 +39,9 @@ public class BoardController {
 		String studentsName = (String) session.getAttribute("studentsName");
 		map.addAttribute("studentsId", studentsId);
 		map.addAttribute("studentsName", studentsName);
+		
+//		int x = (int) session.getAttribute("x"); // 에러 발생 목적으로 씀, 500에러 발생
+		
 		return "board";
 	}
 	
@@ -54,4 +57,7 @@ public class BoardController {
 	}
 	
 //	@GetMapping("/error")
+//	public String callErrorPage() {
+//		return "error";
+//	}
 }
