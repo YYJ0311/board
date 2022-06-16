@@ -120,6 +120,7 @@
 		<!-- WHERE s.students_name like CONCAT(#{studentsName}, '%') -->
 		<!-- 위는 한글자만 같아도 전부 조회됨 -->
 		WHERE s.students_name = #{studentsName}
+		ORDER BY b.board_id DESC
 	</select>
 <!-- 통계 통합 쿼리 -->
 	<select id="selectBoardStatistics" resultType="map">
