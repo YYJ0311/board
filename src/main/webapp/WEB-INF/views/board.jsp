@@ -215,15 +215,15 @@
 	                </c:if>
 	                <c:if test="${path eq '/board/search'}">
 	                	<c:if test="${pageHelper.hasPreviousPage}">
-	                		<a onclick="getSerchedNavList(1, 10, '${param.writer}')">처음</a>
-		                 	<a onclick="getSerchedNavList(${pageHelper.pageNum - 1}, 10, '${param.writer}')"> < </a>
+	                		<a onclick="getSerchedNavList(1, 5, '${param.writer}')">처음</a>
+		                 	<a onclick="getSerchedNavList(${pageHelper.pageNum - 1}, 5, '${param.writer}')"> < </a>
 		                </c:if>
 		         			<c:forEach begin="${pageHelper.navigateFirstPage}" end="${pageHelper.navigateLastPage}" var="pageNum">
-		          				<a id="pageNum${pageNum}" onclick="getSerchedNavList(${pageNum}, 10, '${param.writer}')">${pageNum}</a>
+		          				<a id="pageNum${pageNum}" onclick="getSerchedNavList(${pageNum}, 5, '${param.writer}')">${pageNum}</a>
 		         			</c:forEach>
 		         		<c:if test="${pageHelper.hasNextPage}">
-		                	<a onclick="getSerchedNavList(${pageHelper.pageNum + 1}, 10, '${param.writer}')"> > </a>
-		                	<a onclick="getSerchedNavList(${pageHelper.pages}, 10, '${param.writer}')">끝</a>
+		                	<a onclick="getSerchedNavList(${pageHelper.pageNum + 1}, 5, '${param.writer}')"> > </a>
+		                	<a onclick="getSerchedNavList(${pageHelper.pages}, 5, '${param.writer}')">끝</a>
 		                </c:if>
 	                </c:if>
                  </div>

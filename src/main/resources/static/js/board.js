@@ -41,7 +41,7 @@ function getSerchedNavList(pageNum, pageSize, writer) {
 }
 $('#searchBar').keyup(function(key) {
 	var pageNum = 1;
-	var pageSize = 10;
+	var pageSize = 5;
 	if (key.keyCode == 13) { // 엔터 == 13
 		var search = $('#searchBar').val().trim();
 		if (search != '') {
