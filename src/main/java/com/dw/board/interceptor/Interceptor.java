@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,6 +20,8 @@ import com.dw.board.vo.LogsVO;
 
 @Component // Component : 내가 만든 class를 spring한테 제어해달라는 의미 <--> 스프링이 만들고 관리하는 건 @Bean
 public class Interceptor implements HandlerInterceptor{
+	
+	private static final Logger logger = LoggerFactory.getLogger(Interceptor.class); // Logger와 LoggerFactory 둘 다 slf4j로 import
 	
 	@Autowired
 	LogsService logsService;
@@ -31,9 +35,14 @@ public class Interceptor implements HandlerInterceptor{
 		String httpMethod = request.getMethod();
 		if(ip == null) ip = request.getRemoteAddr();
 		
-		System.out.println("접속한 IP : "+ip);
-		System.out.println("요청받은 URL : "+url);
-		System.out.println("HTTP Method : "+httpMethod);
+//		logger.info("hello world");
+		logger.info("client IP : "+ip);
+		logger.info("request URL : "+url);
+		logger.info("request HTTP Method : "+httpMethod);
+		
+//		System.out.println("접속한 IP : "+ip);
+//		System.out.println("요청받은 URL : "+url);
+//		System.out.println("HTTP Method : "+httpMethod);
 		
 		SimpleDateFormat formatter =
 					new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA); // 한국 시간으로 강제로 맞춤
@@ -47,7 +56,6 @@ public class Interceptor implements HandlerInterceptor{
 		vo.setLongitude("127.4229992");
 		vo.setCreateAt(time);
 		logsService.setLogs(vo);
-		
 		System.out.println("time : "+time);
 		
 		// 세션 체크
@@ -59,7 +67,9 @@ public class Interceptor implements HandlerInterceptor{
 			System.out.println("세션에서 가져온 name : "+studentsName);
 		}
 		if(session.getAttribute("studentsId") == null) {
+			logger.info("session studentsId: "+session.getAttribute("studentsId"));
 			response.sendRedirect("/login"); // 세션에 값이 없으면 /login 경로로 redirect
+			return false;
 		}
 		return true;
 	}

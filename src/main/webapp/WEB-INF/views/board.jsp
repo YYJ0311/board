@@ -155,6 +155,7 @@
              <div class="recentOrders">
                  <div class="cardHeader">
                      <h2>Board List</h2>
+                     <a href="/excel" class="excel-btn">엑섹 다운로드</a>
                      <a href="#" class="btn">글 작성</a>
                  </div>
                  <table>
