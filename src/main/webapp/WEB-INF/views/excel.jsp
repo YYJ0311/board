@@ -52,7 +52,7 @@
 			var options = {
 				success : function(data) {
 				alert("모든 데이터가 업로드 되었습니다.");
-				},
+			},
 			type : "POST"
 			};
 		$("#excelUploadForm").ajaxSubmit(options);
