@@ -2,6 +2,13 @@ plugins {
 	id 'org.springframework.boot' version '2.6.7'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'war'
+}
+
+bootWar{
+	archiveBaseName= 'board'
+	archiveFileName= 'board.war'
+	archiveVersion= '0.0.1'
 }
 
 group = 'com.dw'
@@ -38,6 +45,9 @@ dependencies {
 	// excel
 	implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.2'
 	implementation group: 'org.apache.poi', name: 'poi', version: '5.2.2'
+	// deploy
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	
 }
 
 tasks.named('test') {
